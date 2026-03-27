@@ -48,6 +48,16 @@ def delete_task(task_id):
     except IndexError:
         print("Task not found")
 
+def clear_tasks():
+    confirm = input("Are you sure you want to clear all tasks? (y/n): ")
+    if confirm.lower() == 'y':
+        global tasks
+        tasks = []
+        save_tasks()
+        print("All tasks cleared")
+    else:
+        print("Clearing tasks cancelled")
+
 def main():
     parser = argparse.ArgumentParser(description='TaskMaster CLI')
     subparsers = parser.add_subparsers(dest='command')
@@ -63,6 +73,8 @@ def main():
     delete_parser = subparsers.add_parser('delete', help='Delete a task')
     delete_parser.add_argument('task_id', help='ID of the task to delete', type=int)
 
+    clear_parser = subparsers.add_parser('clear', help='Clear all tasks')
+
     args = parser.parse_args()
     global tasks
     tasks = load_tasks()
@@ -75,6 +87,8 @@ def main():
         complete_task(args.task_id)
     elif args.command == 'delete':
         delete_task(args.task_id)
+    elif args.command == 'clear':
+        clear_tasks()
     else:
         parser.print_help()
 
